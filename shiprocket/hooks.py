@@ -5,6 +5,13 @@ app_description = "Shiprocket Integration"
 app_email = "abdullamirshadcl@gmail.com"
 app_license = "mit"
 
+
+doc_events = {
+    "Sales Order": {
+        "on_submit": "shiprocket.api.create_shiprocket_order",
+        "on_cancel": "shiprocket.api.cancel_shiprocket_order"
+    }
+}
 # Apps
 # ------------------
 

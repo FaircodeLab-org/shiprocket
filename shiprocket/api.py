@@ -23,10 +23,13 @@ def get_shiprocket_token():
 
 # Create an Order in Shiprocket
 @frappe.whitelist()
-def create_shiprocket_order(sales_order):
+def create_shiprocket_order(sales_order=None):
+    if not sales_order:
+        frappe.throw("Sales Order ID is required.")
+
     doc = frappe.get_doc("Sales Order", sales_order)
     token = get_shiprocket_token()
-    url = f"{SHIPROCKET_API_BASE}/orders/create/"
+    url = "https://apiv2.shiprocket.in/v1/external/orders/create/"
 
     order_data = {
         "order_id": doc.name,
@@ -57,17 +60,19 @@ def create_shiprocket_order(sales_order):
     response = requests.post(url, json=order_data, headers=headers)
 
     if response.status_code == 200:
-        order_response = response.json()
-        frappe.msgprint("Order successfully sent to Shiprocket!")
-        return order_response  # Returns the Shiprocket order details
+        frappe.msgprint(f"Order {doc.name} successfully sent to Shiprocket!")
     else:
         frappe.throw(f"Shiprocket Order Creation Failed: {response.text}")
 
+
 # Cancel an Order in Shiprocket
 @frappe.whitelist()
-def cancel_shiprocket_order(order_id):
+def cancel_shiprocket_order(order_id=None):
+    if not order_id:
+        frappe.throw("Order ID is required for cancellation.")
+
     token = get_shiprocket_token()
-    url = f"{SHIPROCKET_API_BASE}/orders/cancel"
+    url = "https://apiv2.shiprocket.in/v1/external/orders/cancel"
     headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
     
     payload = {"ids": [order_id]}  # Shiprocket expects a list of order IDs

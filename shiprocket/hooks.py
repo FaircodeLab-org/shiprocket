@@ -8,9 +8,15 @@ app_license = "mit"
 
 doc_events = {
     "Sales Order": {
-        "on_submit": "shiprocket.api.create_shiprocket_order",
+        # "on_submit": "shiprocket.api.create_shiprocket_order",
         "on_cancel": "shiprocket.api.cancel_shiprocket_order"
+    },
+    "Sales Invoice": {
+        "on_submit": "shiprocket.api.create_shiprocket_order",
     }
+}
+webhooks = {
+    "webhook_handler": "shiprocket.api.webhook_handler"
 }
 # Apps
 # ------------------
